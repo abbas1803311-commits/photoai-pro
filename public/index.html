@@ -1,1 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhotoAI Pro — Restore &amp; Upscale Your Photos</title>
+<meta name="description" content="Restore damaged old photos or enhance and upscale images to 4K, right in your browser.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%230B0D10%22/><circle cx=%2250%22 cy=%2250%22 r=%2226%22 fill=%22none%22 stroke=%22%23D4A44C%22 stroke-width=%226%22/><circle cx=%2250%22 cy=%2250%22 r=%2210%22 fill=%22%235AC8D8%22/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
+<div class="grain" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a href="#top" class="logo">
+      <span class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="28" height="28">
+          <circle cx="20" cy="20" r="15" fill="none" stroke="#D4A44C" stroke-width="3"/>
+          <circle cx="20" cy="20" r="6" fill="#5AC8D8"/>
+        </svg>
+      </span>
+      PhotoAI <em>Pro</em>
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a href="#studio">Studio</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a href="#studio" class="btn btn-ghost nav-cta">Open studio</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile">
+    <a href="#studio">Studio</a>
+    <a href="#how">How it works</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow">Darkroom, digitized</p>
+        <h1>Every photo has<br> a version worth<br> <span class="ital">keeping.</span></h1>
+        <p class="hero-sub">Upload a scratched family photo or a soft, low-res shot. PhotoAI Pro rebuilds detail and lifts resolution to 4K &mdash; right here, no software to install.</p>
+        <div class="hero-actions">
+          <a href="#studio" class="btn btn-primary">Try it on your photo</a>
+          <a href="#how" class="btn btn-text">See how it works &darr;</a>
+        </div>
+      </div>
+
+      <div class="hero-demo">
+        <div class="compare" id="heroCompare">
+          <div class="compare-frame">
+            <img class="compare-img compare-after" src="https://images.unsplash.com/photo-1552053831-71594a27632d?q=80&w=1200&auto=format&fit=crop" alt="Restored, sharp version of a portrait photo">
+            <div class="compare-clip" id="heroClip">
+              <img class="compare-img compare-before" src="https://images.unsplash.com/photo-1552053831-71594a27632d?q=80&w=1200&auto=format&fit=crop&sat=-100&blend-mode=multiply" alt="Original, faded and damaged version of the same portrait photo">
+            </div>
+            <div class="compare-handle" id="heroHandle" role="slider" aria-label="Comparison slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+              <span class="handle-grip">
+                <svg width="14" height="14" viewBox="0 0 24 24"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+            <span class="compare-tag tag-before">Before</span>
+            <span class="compare-tag tag-after">After</span>
+          </div>
+        </div>
+        <p class="demo-caption">Drag to compare &mdash; this is a live example, not your upload.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STUDIO -->
+  <section class="studio" id="studio">
+    <div class="wrap">
+      <p class="eyebrow">The studio</p>
+      <h2>Bring your own photo.</h2>
+
+      <div class="studio-panel">
+
+        <!-- Upload state -->
+        <div class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept="image/png, image/jpeg, image/webp" hidden>
+          <div class="dropzone-inner">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M12 16V4M12 4l-4 4M12 4l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <p><strong>Drop a photo here</strong> or <button type="button" class="link-btn" id="browseBtn">browse your files</button></p>
+            <p class="dropzone-hint">JPG, PNG or WEBP · up to 12MB</p>
+          </div>
+        </div>
+
+        <!-- Working state (hidden until a file is chosen) -->
+        <div class="workspace" id="workspace" hidden>
+
+          <div class="workspace-preview">
+            <div class="compare" id="workCompare">
+              <div class="compare-frame" id="workFrame">
+                <img class="compare-img compare-after" id="afterImg" alt="Processed result">
+                <div class="compare-clip" id="workClip">
+                  <img class="compare-img compare-before" id="beforeImg" alt="Original upload">
+                </div>
+                <div class="compare-handle" id="workHandle" role="slider" aria-label="Comparison slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0">
+                  <span class="handle-grip">
+                    <svg width="14" height="14" viewBox="0 0 24 24"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                </div>
+                <span class="compare-tag tag-before">Before</span>
+                <span class="compare-tag tag-after" id="afterTag">After</span>
+
+                <div class="processing-overlay" id="processingOverlay" hidden>
+                  <div class="spinner" aria-hidden="true"></div>
+                  <p id="processingLabel">Restoring detail&hellip;</p>
+                </div>
+              </div>
+            </div>
+            <div class="file-meta" id="fileMeta"></div>
+          </div>
+
+          <div class="workspace-controls">
+            <p class="controls-label">Choose a mode</p>
+
+            <button class="mode-card mode-restore" id="modeRestore" data-mode="restore">
+              <span class="mode-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 3a9 9 0 100 18 9 9 0 000-18z" stroke="currentColor" stroke-width="1.5"/><path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </span>
+              <span class="mode-text">
+                <strong>Restore Old Photo</strong>
+                <em>Repairs scratches, fading, and tears. Rebuilds faces and fine detail.</em>
+              </span>
+            </button>
+
+            <button class="mode-card mode-enhance" id="modeEnhance" data-mode="enhance">
+              <span class="mode-icon" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M4 14v6h6M20 10V4h-6M4 20L10 14M20 4L14 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="mode-text">
+                <strong>Enhance &amp; Upscale to 4K</strong>
+                <em>Sharpens detail and increases resolution for print or large screens.</em>
+              </span>
+            </button>
+
+            <button class="btn btn-primary btn-run" id="runBtn" disabled>Select a mode</button>
+
+            <div class="result-actions" id="resultActions" hidden>
+              <a class="btn btn-primary" id="downloadBtn" download="photoai-pro-result.jpg">Download result</a>
+              <button class="btn btn-ghost" id="resetBtn">Start over</button>
+            </div>
+
+            <p class="error-msg" id="errorMsg" role="alert" hidden></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="wrap">
+      <p class="eyebrow">Under the hood</p>
+      <h2>Two models, one upload.</h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <span class="how-dot dot-amber" aria-hidden="true"></span>
+          <h3>Restoration</h3>
+          <p>A face- and texture-aware model trained on degraded photographs. It separates genuine damage &mdash; scratches, mold, creases, faded dye &mdash; from the picture underneath, then rebuilds only what's missing.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-dot dot-cyan" aria-hidden="true"></span>
+          <h3>Upscaling</h3>
+          <p>A super-resolution model increases pixel dimensions while inferring plausible fine detail, so edges stay crisp instead of smearing into blur at 4K sizes.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-dot dot-white" aria-hidden="true"></span>
+          <h3>Your files</h3>
+          <p>Images are sent securely to processing, returned to your browser, and not used for training. Nothing is stored longer than it takes to process your request.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <p class="eyebrow">Questions</p>
+      <h2>Good to know.</h2>
+      <div class="faq-list">
+        <details>
+          <summary>What file types can I upload?</summary>
+          <p>JPG, PNG and WEBP, up to 12MB. For best restoration results, upload the highest-resolution scan of the original you have access to.</p>
+        </details>
+        <details>
+          <summary>Can I use both modes on the same photo?</summary>
+          <p>Yes. Run Restore Old Photo first to repair damage, download the result, then upload it again and run Enhance &amp; Upscale to 4K.</p>
+        </details>
+        <details>
+          <summary>Is there a size limit on the 4K output?</summary>
+          <p>Output is capped at 3840&times;2160px (4K UHD). Very small or very large source images may be scaled to stay within that bound.</p>
+        </details>
+        <details>
+          <summary>Do you keep my photos?</summary>
+          <p>No. Images pass through processing and are discarded once your result is returned.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <span>PhotoAI <em>Pro</em></span>
+    <span class="footer-note">Built for photos worth keeping.</span>
+  </div>
+</footer>
+
+<script src="js/app.js"></script>
+</body>
+                </html>
